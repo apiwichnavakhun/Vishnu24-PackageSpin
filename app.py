@@ -54,7 +54,7 @@ def export_pdf():
     except FileNotFoundError:
         return jsonify({"error": "ไม่พบไฟล์เทมเพลต"}), 404
 
-    for i in range(2, min(20, len(csv_reader))):
+    for i in range(1, min(20, len(csv_reader))):
         try:
             package_number = int(csv_reader[i][1])
             if package_number in package_to_group:

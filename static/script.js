@@ -194,7 +194,7 @@ document.getElementById('exportPdfBtn').addEventListener('click', async () => {
         const tr = document.createElement('tr');
         
         row.forEach(cell => {
-            const cellElement = rowIndex < 2 ? document.createElement('th') : document.createElement('td');
+            const cellElement = rowIndex < 1 ? document.createElement('th') : document.createElement('td');
             cellElement.innerText = cell || ''; 
             
             cellElement.style.border = '1px solid #e8d0b0';
@@ -202,7 +202,7 @@ document.getElementById('exportPdfBtn').addEventListener('click', async () => {
             cellElement.style.textAlign = 'center';
             cellElement.style.fontFamily = "'Prompt', sans-serif";
             
-            if (rowIndex < 2) {
+            if (rowIndex < 1) {
                 cellElement.style.backgroundColor = '#8b1e22';
                 cellElement.style.color = '#ffffff';
                 cellElement.style.fontWeight = '600';
