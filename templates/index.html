@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ค่ายวิษณุกรรมบุตร - วงล้อสุ่มจับคู่แพ็กเกจ</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="badge-logo">INTANIA</div>
+        <h1>ค่ายวิษณุกรรมบุตร</h1>
+        <p class="subtitle">คณะวิศวกรรมศาสตร์ จุฬาลงกรณ์มหาวิทยาลัย</p>
+        
+        <div class="wheel-outer-box">
+            <div class="arrow-pointer"></div>
+            <div class="wheel-container">
+                <canvas id="outerWheel" width="500" height="500"></canvas>
+                <canvas id="innerWheel" width="320" height="320"></canvas>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button id="spinBtn" class="btn btn-spin">⚡ เริ่มหมุนวงล้อสุ่ม ⚡</button>
+            <button id="openModalBtn" class="btn btn-table" disabled>📊 แสดงตารางผลลัพธ์</button>
+            <button id="exportPdfBtn" class="btn btn-export" disabled>📄 Export เป็น PDF</button>
+        </div>
+    </div>
+
+    <div id="resultModal" class="modal hidden">
+        <div class="modal-content">
+            <span id="closeModalBtn" class="close-btn">&times;</span>
+            <h2>📊 ตารางสรุปการจับคู่ล่าสุด</h2>
+            <div class="table-scroll">
+                <table id="resultTable">
+                    <thead>
+                        <tr>
+                            <th>Group (วงนอก)</th>
+                            <th>Package (วงใน)</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
