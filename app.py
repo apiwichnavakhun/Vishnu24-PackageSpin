@@ -46,7 +46,7 @@ def export_pdf():
     package_to_group = {int(item['package']): item['group'] for item in data}
     
     # ใช้ BASE_DIR เพื่อให้หาไฟล์เจอทั้ง local และ Vercel
-    template_path = os.path.join(BASE_DIR, 'Copy of Package - Sheet1.csv')
+    template_path = os.path.join(BASE_DIR, 'PackageSheets.csv')
     
     try:
         with open(template_path, mode='r', encoding='utf-8-sig') as f:
