@@ -7,47 +7,76 @@ app = Flask(__name__)
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-GROUPS = ['A', 'B', 'C', 'Dog', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T']
+GROUPS   = ['A','B','C','Dog','E','F','G','H','J','K','L','M','N','P','Q','R','S','T']
 PACKAGES = list(range(1, 19))
+
 
 @app.route('/')
 def index():
     return render_template('index.html')
 
+
 @app.route('/spin', methods=['POST'])
 def spin():
-    shuffled_groups = GROUPS.copy()
+    shuffled_groups   = GROUPS.copy()
     shuffled_packages = PACKAGES.copy()
     random.shuffle(shuffled_groups)
     random.shuffle(shuffled_packages)
 
-    offset = random.randint(0, 17)
-    
+    offset  = random.randint(0, 17)
     results = []
     for i, group in enumerate(shuffled_groups):
         package_index = (i + offset) % 18
-        results.append({
-            'group': group,
-            'package': shuffled_packages[package_index]
-        })
-        
+        results.append({'group': group, 'package': shuffled_packages[package_index]})
+
     sorted_results = sorted(results, key=lambda x: x['group'])
-        
+
     return jsonify({
-        'shuffled_groups': shuffled_groups,
+        'shuffled_groups':   shuffled_groups,
         'shuffled_packages': shuffled_packages,
-        'offset': offset,
-        'results': sorted_results
+        'offset':            offset,
+        'results':           sorted_results
     })
+
+
+@app.route('/spin_subset', methods=['POST'])
+def spin_subset():
+    """Mode 2 – spin with only the remaining groups/packages."""
+    body     = request.json
+    groups   = body.get('groups',   [])
+    packages = body.get('packages', [])
+
+    n = len(groups)
+    if n == 0:
+        return jsonify({'error': 'no remaining items'}), 400
+
+    shuffled_groups   = groups.copy()
+    shuffled_packages = packages.copy()
+    random.shuffle(shuffled_groups)
+    random.shuffle(shuffled_packages)
+
+    offset  = random.randint(0, n - 1)
+    results = []
+    for i, group in enumerate(shuffled_groups):
+        package_index = (i + offset) % n
+        results.append({'group': group, 'package': shuffled_packages[package_index]})
+
+    sorted_results = sorted(results, key=lambda x: x['group'])
+
+    return jsonify({
+        'shuffled_groups':   shuffled_groups,
+        'shuffled_packages': shuffled_packages,
+        'offset':            offset,
+        'results':           sorted_results
+    })
+
 
 @app.route('/export-pdf', methods=['POST'])
 def export_pdf():
-    data = request.json
+    data             = request.json
     package_to_group = {int(item['package']): item['group'] for item in data}
-    
-    # ใช้ BASE_DIR เพื่อให้หาไฟล์เจอทั้ง local และ Vercel
+
     template_path = os.path.join(BASE_DIR, 'PackageSheets.csv')
-    
     try:
         with open(template_path, mode='r', encoding='utf-8-sig') as f:
             csv_reader = list(csv.reader(f))
@@ -63,6 +92,7 @@ def export_pdf():
             pass
 
     return jsonify({'table_data': csv_reader})
+
 
 if __name__ == '__main__':
     app.run(debug=False)

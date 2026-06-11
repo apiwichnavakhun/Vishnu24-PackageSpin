@@ -10,41 +10,130 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <div class="container">
-        <div class="badge-logo">คณะกรรมการฝ่ายแผน</div>
-        <h1>PACKAGE of VISHNU 24</h1>
-        <p class="subtitle">ขอให้ทุกกรูปโชคดีคั้บบบ</p>
-        
-        <div class="wheel-outer-box">
-            <div class="arrow-pointer"></div>
-            <div class="wheel-container">
-                <canvas id="outerWheel" width="500" height="500"></canvas>
-                <canvas id="innerWheel" width="320" height="320"></canvas>
+
+    <!-- ===== MODE SELECTOR SCREEN ===== -->
+    <div id="modeSelector" class="mode-selector-screen screen">
+        <div class="mode-selector-box">
+            <div class="badge-logo">PACKAGE SPINNER</div>
+            <h1>PACKAGE of VISHNU 24</h1>
+            <p class="subtitle">เลือกโหมดการสุ่ม</p>
+            <div class="mode-cards">
+                <div class="mode-card" id="selectMode1">
+                    <div class="mode-icon">🎡</div>
+                    <h3>โหมดปกติ</h3>
+                    <p>หมุนวงล้อครั้งเดียว<br>ได้ผลลัพธ์ครบทั้ง 18 คู่</p>
+                </div>
+                <div class="mode-card" id="selectMode2">
+                    <div class="mode-icon">🎯</div>
+                    <h3>โหมดตัดออก</h3>
+                    <p>หมุนทีละรอบ ประกาศผล<br>แล้วตัด Group+Package ออก</p>
+                </div>
             </div>
-        </div>
-        
-        <div class="controls">
-            <button id="spinBtn" class="btn btn-spin">หมุนวงล้อสุ่ม</button>
-            <button id="openModalBtn" class="btn btn-table" disabled>แสดงตารางผลลัพธ์</button>
-            <button id="exportPdfBtn" class="btn btn-export" disabled>Export</button>
         </div>
     </div>
 
-    <div id="resultModal" class="modal hidden">
-        <div class="modal-content">
-            <span id="closeModalBtn" class="close-btn">&times;</span>
-            <h2>📊 ตารางสรุปการจับคู่ล่าสุด</h2>
-            <div class="table-scroll">
-                <table id="resultTable">
-                    <thead>
-                        <tr>
-                            <th>Group</th>
-                            <th>Package</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
+    <!-- ===== MODE 1: NORMAL ===== -->
+    <div id="mode1Screen" class="screen hidden">
+        <div class="container">
+            <div class="top-bar">
+                <button class="btn btn-back" id="backFromMode1">← กลับ</button>
+                <div class="badge-logo">โหมดปกติ</div>
             </div>
+            <h1>PACKAGE of VISHNU 24</h1>
+            <p class="subtitle">คณะกรรมการฝ่ายแผน</p>
+            
+            <div class="wheel-outer-box">
+                <div class="arrow-pointer"></div>
+                <div class="wheel-container">
+                    <canvas id="outerWheel" width="500" height="500"></canvas>
+                    <canvas id="innerWheel" width="320" height="320"></canvas>
+                </div>
+            </div>
+            
+            <div class="controls">
+                <button id="spinBtn" class="btn btn-spin">หมุนวงล้อสุ่ม</button>
+                <button id="openModalBtn" class="btn btn-table" disabled>แสดงตารางผลลัพธ์</button>
+                <button id="exportPdfBtn" class="btn btn-export" disabled>Export</button>
+            </div>
+        </div>
+
+        <div id="resultModal" class="modal hidden">
+            <div class="modal-content">
+                <span id="closeModalBtn" class="close-btn">&times;</span>
+                <h2>📊 ตารางสรุปการจับคู่ล่าสุด</h2>
+                <div class="table-scroll">
+                    <table id="resultTable">
+                        <thead><tr><th>Group</th><th>Package</th></tr></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== MODE 2: ELIMINATION ===== -->
+    <div id="mode2Screen" class="screen hidden">
+
+        <!-- TOP HEADER -->
+        <div class="mode2-header">
+            <div class="mode2-header-inner">
+                <div class="mode2-header-text">
+                    <h1>PACKAGE of VISHNU 24</h1>
+                    <p class="subtitle">คณะกรรมการฝ่ายแผน</p>
+                </div>
+                <button class="btn btn-back" id="backFromMode2">← เลือกโหมด</button>
+            </div>
+        </div>
+
+        <div class="mode2-layout">
+
+            <!-- LEFT: Wheel -->
+            <div class="mode2-left">
+                <div class="mode2-wheel-wrap">
+                    <div class="arrow-pointer"></div>
+                    <div class="wheel-container">
+                        <canvas id="outerWheel2" width="420" height="420"></canvas>
+                        <canvas id="innerWheel2" width="268" height="268"></canvas>
+                    </div>
+                </div>
+                <span id="remainingCount" class="remaining-badge">เหลือ 18 คู่</span>
+                <div class="controls" style="width:100%; max-width:380px;">
+                    <button id="spinBtn2" class="btn btn-spin">หมุนวงล้อ</button>
+                    <button id="exportPdfBtn2" class="btn btn-export" disabled>Export ทั้งหมด</button>
+                </div>
+            </div>
+
+            <!-- RIGHT: Announcement -->
+            <div class="mode2-right">
+                <div id="announcePlaceholder" class="announce-placeholder">
+                    <div class="announce-icon">🎲</div>
+                    <p>กด <strong>หมุนวงล้อ</strong><br>เพื่อเริ่มการสุ่ม</p>
+                </div>
+
+                <div id="announceResult" class="announce-result hidden">
+                    <p class="announce-label">รอบที่ <span id="roundNumber">1</span></p>
+                    <div class="announce-pair">
+                        <div class="announce-group-box">
+                            <span class="announce-sub">Group</span>
+                            <span class="announce-value" id="announceGroup">—</span>
+                        </div>
+                        <div class="announce-arrow">×</div>
+                        <div class="announce-package-box">
+                            <span class="announce-sub">Package</span>
+                            <span class="announce-value" id="announcePackage">—</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- History list -->
+                <div class="history-section">
+                    <h4 class="history-title">ผลที่ผ่านมา</h4>
+                    <div id="historyList" class="history-list">
+                        <p class="history-empty">ยังไม่มีผลลัพธ์</p>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 
